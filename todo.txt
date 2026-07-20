@@ -1,2 +1,3 @@
 makefile for build and then run or just in the deploy.yml
 setup cicd, improve frontend, host on gitea, build on x86 for pi (arm), push to pi and deploy.
+move the data folder elsewhere so that it persists
