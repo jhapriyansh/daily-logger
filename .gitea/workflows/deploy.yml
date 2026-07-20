@@ -8,9 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Build binsry
+      - name: Build binary
         run: |
           cd ~/projects/daily-logger
           git pull
           GOOS=linux GOARCH=arm64 go build -o daily-logger .
-          scp daily-logger pi@10.85.150.248:/opt/daily-logger/daily-logger
+      - name: Deploy to Pi
+        run: |
+          scp -o ConnectTimeout=10 -r ~/projects/daily-logger pi@pi.local:/opt/daily-logger-new
+          ssh -o ConnectTimeout=10 pi@pi.local "rm -rf /opt/daily-logger && mv /opt/daily-logger-new /opt/daily-logger"
