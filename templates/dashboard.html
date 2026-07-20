@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Daily Logger</title></head>
+<body>
+  <h1>Your Topics</h1>
+  <form method="POST" action="/topics/create">
+    <input name="name" placeholder="new topic name" required>
+    <button type="submit">Add Topic</button>
+  </form>
+  <ul>
+    {{range .}}
+    <li>
+      <a href="/topic?slug={{.Slug}}">{{.Name}}</a> — {{if .LoggedToday}}✅ logged today{{else}}❌ not logged{{end}}
+      <form method="POST" action="/journals/create" style="display:inline">
+        <input type="hidden" name="topic_id" value="{{.ID}}">
+        <input name="content" placeholder="today's entry" required>
+        <button type="submit">Add</button>
+      </form>
+    </li>
+    {{end}}
+  </ul>
+</body>
+</html>

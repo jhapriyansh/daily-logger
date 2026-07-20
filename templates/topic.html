@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{.TopicName}}</title></head>
+<body>
+  <h1>{{.TopicName}}</h1>
+  <a href="/">← back</a>
+  <ul>
+    {{range .Entries}}
+    <li><strong>{{.Date}}</strong>: {{.Content}}</li>
+    {{end}}
+  </ul>
+</body>
+</html>
