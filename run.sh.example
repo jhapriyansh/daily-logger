@@ -2,4 +2,5 @@
 export NTFY_BASE="https://ntfybaseurl..."
 export NTFY_USER="username"
 export NTFY_PASS="password"
-go run .
+./daily-logger.sh
+
