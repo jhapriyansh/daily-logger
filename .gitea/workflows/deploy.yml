@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Build binary
+      - name: Build binary (arm)
         run: |
           cd ~/projects/daily-logger
           git pull
