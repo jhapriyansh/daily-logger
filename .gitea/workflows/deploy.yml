@@ -13,4 +13,4 @@ jobs:
           cd ~/projects/daily-logger
           git pull
           GOOS=linux GOARCH=arm64 go build -o daily-logger .
-          scp daily-logger pi@pi.local:/opt/daily-logger/daily-logger
+          scp daily-logger pi@10.85.150.248:/opt/daily-logger/daily-logger
