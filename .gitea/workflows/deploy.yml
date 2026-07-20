@@ -1,0 +1,16 @@
+name: Build and Push to Pi
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build binsry
+        run: |
+          cd ~/projects/daily-logger
+          git pull
+          GOOS=linux GOARCH=arm64 go build -o daily-logger .
+          scp daily-logger pi@pi.local:/opt/daily-logger/daily-logger
