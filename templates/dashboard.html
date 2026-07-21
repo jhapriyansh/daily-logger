@@ -1,26 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Daily Logger</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Daily Logger</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-  <h1>Your Topics</h1>
-  <form method="POST" action="/topics/create">
-    <input name="name" placeholder="new topic name" required>
-    <button type="submit">Add Topic</button>
-  </form>
-  <ul>
-    {{range .}}
-    <li>
-      <a href="/topic?slug={{.Slug}}">{{.Name}}</a> — {{if .LoggedToday}}✅ logged today{{else}}❌ not logged{{end}}
-      <form method="POST" action="/journals/create" style="display:inline">
-        <input type="hidden" name="topic_id" value="{{.ID}}">
-        <input name="content" placeholder="today's entry" required>
-        <button type="submit">Add</button>
+<body class="page">
+  <main class="shell">
+    <header class="page-header">
+      <p class="eyebrow">Daily Logger</p>
+      <h1>Your Topics</h1>
+    </header>
+
+    <section class="tool-panel" aria-labelledby="new-topic-title">
+      <h2 id="new-topic-title">New Topic</h2>
+      <form class="inline-form" method="POST" action="/topics/create">
+        <input name="name" placeholder="new topic name" required>
+        <button type="submit">Add Topic</button>
       </form>
-    </li>
-    {{end}}
-  </ul>
+    </section>
+
+    <section class="topic-list" aria-label="Topics">
+      {{range .}}
+      <article class="topic-item">
+        <div class="topic-main">
+          <a class="topic-title" href="/topic?slug={{.Slug}}">{{.Name}}</a>
+          {{if .LoggedToday}}
+          <span class="status is-done">Logged Today</span>
+          {{else}}
+          <span class="status is-open">Not Logged</span>
+          {{end}}
+        </div>
+        <form class="entry-form" method="POST" action="/journals/create">
+          <input type="hidden" name="topic_id" value="{{.ID}}">
+          <input name="content" placeholder="today's entry" required>
+          <button type="submit">Add</button>
+        </form>
+      </article>
+      {{else}}
+      <p class="empty-state">No topics yet.</p>
+      {{end}}
+    </section>
+  </main>
 </body>
 </html>

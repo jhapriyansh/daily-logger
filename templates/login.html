@@ -1,13 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head><title>Login</title></head>
-<body>
-  <h1>Login</h1>
-  <form method="POST" action="/login">
-    <input name="username" placeholder="username" required>
-    <input name="password" type="password" placeholder="password" required>
-    <button type="submit">Login</button>
-  </form>
-  <a href="/signup">Need an account?</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Login | Daily Logger</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="page page-auth">
+  <main class="auth-panel" aria-labelledby="login-title">
+    <p class="eyebrow">Daily Logger</p>
+    <h1 id="login-title">Login</h1>
+    <form class="stack" method="POST" action="/login">
+      <label>
+        <span>Username</span>
+        <input name="username" autocomplete="username" placeholder="username" required>
+      </label>
+      <label>
+        <span>Password</span>
+        <input name="password" type="password" autocomplete="current-password" placeholder="password" required>
+      </label>
+      <button type="submit">Login</button>
+    </form>
+    <p class="auth-link"><a href="/signup">Need an account?</a></p>
+  </main>
 </body>
 </html>

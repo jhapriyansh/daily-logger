@@ -1,13 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head><title>Sign Up</title></head>
-<body>
-  <h1>Sign Up</h1>
-  <form method="POST" action="/signup">
-    <input name="username" placeholder="username" required>
-    <input name="password" type="password" placeholder="password" required>
-    <button type="submit">Sign Up</button>
-  </form>
-  <a href="/login">Already have an account?</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Sign Up | Daily Logger</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="page page-auth">
+  <main class="auth-panel" aria-labelledby="signup-title">
+    <p class="eyebrow">Daily Logger</p>
+    <h1 id="signup-title">Sign Up</h1>
+    <form class="stack" method="POST" action="/signup">
+      <label>
+        <span>Username</span>
+        <input name="username" autocomplete="username" placeholder="username" required>
+      </label>
+      <label>
+        <span>Password</span>
+        <input name="password" type="password" autocomplete="new-password" placeholder="password" required>
+      </label>
+      <button type="submit">Create Account</button>
+    </form>
+    <p class="auth-link"><a href="/login">Already have an account?</a></p>
+  </main>
 </body>
 </html>
