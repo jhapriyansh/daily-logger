@@ -8,6 +8,7 @@ export NTFY_BASE="https://ntfybaseurl..."
 export NTFY_USER="yourusername"
 export NTFY_PASS="yourpassword"
 export DB_PATH="$DATA_DIR/logger.db"
+export APP_TIMEZONE="Asia/Kolkata"
 
 cd "$(dirname "$0")"
 exec ./daily-logger

@@ -9,7 +9,7 @@ import (
 )
 
 func checkMissingJournals(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string) {
-	today := time.Now().Format("2006-01-02")
+	currentDate := today()
 
 	rows, err := db.Query(`
 		SELECT t.name FROM topics t
@@ -17,7 +17,7 @@ func checkMissingJournals(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string) {
 			SELECT 1 FROM journals j
 			WHERE j.topic_id = t.id AND j.entry_date = ?
 		)
-	`, today)
+	`, currentDate)
 	if err != nil {
 		return
 	}
@@ -40,7 +40,7 @@ func checkMissingJournals(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string) {
 func startDailyCheck(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string, checkHour int) {
 	go func() {
 		for {
-			now := time.Now()
+			now := time.Now().In(appLocation())
 			next := time.Date(now.Year(), now.Month(), now.Day(), checkHour, 0, 0, 0, now.Location())
 			if now.After(next) {
 				next = next.Add(24 * time.Hour)

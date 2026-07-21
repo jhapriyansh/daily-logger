@@ -7,40 +7,66 @@
   <title>Daily Logger</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
-<body class="page">
-  <main class="shell">
-    <header class="page-header">
-      <p class="eyebrow">Daily Logger</p>
-      <h1>Your Topics</h1>
-    </header>
+<body class="terminal-page">
+  <main class="terminal-app">
+    <aside class="sidebar" aria-label="Topics">
+      <div class="brand">
+        <span class="prompt">~/daily-logger $</span>
+        <h1>topics</h1>
+      </div>
 
-    <section class="tool-panel" aria-labelledby="new-topic-title">
-      <h2 id="new-topic-title">New Topic</h2>
-      <form class="inline-form" method="POST" action="/topics/create">
-        <input name="name" placeholder="new topic name" required>
-        <button type="submit">Add Topic</button>
-      </form>
-    </section>
+      <nav class="topic-nav">
+        {{range .Topics}}
+        <a class="topic-nav-item {{if .LoggedToday}}is-logged{{else}}is-missing{{end}} {{if $.SelectedTopic}}{{if eq .ID $.SelectedTopic.ID}}is-active{{end}}{{end}}" href="/topic?slug={{.Slug}}">
+          <span class="topic-status-mark" aria-hidden="true">{{if .LoggedToday}}+{{else}}-{{end}}</span>
+          <span class="topic-nav-name">{{.Name}}</span>
+          <span class="topic-nav-state">{{if .LoggedToday}}logged{{else}}due{{end}}</span>
+        </a>
+        {{else}}
+        <p class="sidebar-empty">No topics created.</p>
+        {{end}}
+      </nav>
 
-    <section class="topic-list" aria-label="Topics">
-      {{range .}}
-      <article class="topic-item">
-        <div class="topic-main">
-          <a class="topic-title" href="/topic?slug={{.Slug}}">{{.Name}}</a>
-          {{if .LoggedToday}}
-          <span class="status is-done">Logged Today</span>
-          {{else}}
-          <span class="status is-open">Not Logged</span>
-          {{end}}
+      <form class="new-topic-form" method="POST" action="/topics/create">
+        <label for="topic-name">new topic</label>
+        <div>
+          <span aria-hidden="true">&gt;</span>
+          <input id="topic-name" name="name" placeholder="topic name" required>
+          <button type="submit" aria-label="Add topic">+</button>
         </div>
-        <form class="entry-form" method="POST" action="/journals/create">
-          <input type="hidden" name="topic_id" value="{{.ID}}">
-          <input name="content" placeholder="today's entry" required>
-          <button type="submit">Add</button>
-        </form>
-      </article>
+      </form>
+    </aside>
+
+    <section class="workspace" aria-live="polite">
+      {{if .SelectedTopic}}
+      <header class="workspace-header">
+        <p class="prompt">cat logs/{{.SelectedTopic.Slug}}</p>
+        <h2>{{.SelectedTopic.Name}}</h2>
+        <p class="status-line">{{if .SelectedTopic.LoggedToday}}[logged today]{{else}}[not logged today]{{end}}</p>
+      </header>
+
+      <form class="log-form" method="POST" action="/journals/create">
+        <input type="hidden" name="topic_id" value="{{.SelectedTopic.ID}}">
+        <label for="entry">new log</label>
+        <textarea id="entry" name="content" placeholder="write today's log..." rows="4" required></textarea>
+        <button type="submit">save log</button>
+      </form>
+
+      <section class="log-list" aria-label="Logs for {{.SelectedTopic.Name}}">
+        {{range .Entries}}
+        <article class="log-entry">
+          <time datetime="{{.Date}}">{{.Date}}</time>
+          <p>{{.Content}}</p>
+        </article>
+        {{else}}
+        <p class="empty-logs">No logs for this topic yet.</p>
+        {{end}}
+      </section>
       {{else}}
-      <p class="empty-state">No topics yet.</p>
+      <section class="blank-workspace">
+        <p class="prompt">daily-logger</p>
+        <h2>Create a topic to start logging.</h2>
+      </section>
       {{end}}
     </section>
   </main>
