@@ -35,6 +35,9 @@
           <button type="submit" aria-label="Add topic">+</button>
         </div>
       </form>
+      <form class="logout-form" method="POST" action="/logout">
+        <button type="submit">logout</button>
+      </form>
     </aside>
 
     <section class="workspace" aria-live="polite">
@@ -43,6 +46,10 @@
         <p class="prompt">cat logs/{{.SelectedTopic.Slug}}</p>
         <h2>{{.SelectedTopic.Name}}</h2>
         <p class="status-line">{{if .SelectedTopic.LoggedToday}}[logged today]{{else}}[not logged today]{{end}}</p>
+        <form class="delete-topic-form" method="POST" action="/topics/delete">
+          <input type="hidden" name="topic_id" value="{{.SelectedTopic.ID}}">
+          <button type="submit">delete topic</button>
+        </form>
       </header>
 
       <form class="log-form" method="POST" action="/journals/create">

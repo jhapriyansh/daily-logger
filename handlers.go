@@ -41,7 +41,7 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		createSession(w, id)
-		http.Redirect(w, r, "/topic?slug="+slug, http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
 
@@ -55,6 +55,51 @@ func createTopicHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		http.Redirect(w, r, "/topic?slug="+slug, http.StatusSeeOther)
+	})
+}
+
+func deleteTopicHandler(db *sql.DB) http.HandlerFunc {
+	return requireAuth(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		userID, _ := getUserID(r)
+		topicID := r.FormValue("topic_id")
+
+		tx, err := db.Begin()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer tx.Rollback()
+
+		var ownedTopicID int
+		err = tx.QueryRow("SELECT id FROM topics WHERE id = ? AND user_id = ?", topicID, userID).Scan(&ownedTopicID)
+		if err == sql.ErrNoRows {
+			http.Error(w, "topic not found", http.StatusNotFound)
+			return
+		}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if _, err = tx.Exec("DELETE FROM journals WHERE topic_id = ?", ownedTopicID); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if _, err = tx.Exec("DELETE FROM topics WHERE id = ?", ownedTopicID); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err = tx.Commit(); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	})
 }
