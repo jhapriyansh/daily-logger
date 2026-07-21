@@ -37,5 +37,5 @@ Requires SSH key auth already set up between the osdev-runner host and the Pi
 (no password prompt).
 
 ### Todo
-- improve the UI
 - Cloudflare Tunnel for external access (currently LAN only)
+- dockerfile and compose for self hosting
