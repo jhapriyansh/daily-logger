@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: osdev-runner
+    runs-on: trex-runner
     steps:
       - uses: actions/checkout@v4
 
