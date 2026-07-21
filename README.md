@@ -29,7 +29,7 @@ Requires a running ntfy instance reachable at NTFY_BASE.
 Edit /opt/daily-logger/run.sh on the Pi with real NTFY credentials before starting the service.
 
 After this one-time setup, every push to main auto-builds and deploys via 
-Gitea Actions (see deploy.yml) — only the binary and templates/ are synced; 
+Gitea Actions (see deploy.yml), only the binary and templates/ are synced; 
 run.sh and the persistent data directory (/var/lib/daily-logger) on the Pi 
 are left untouched.
 
