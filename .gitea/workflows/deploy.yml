@@ -16,6 +16,6 @@ jobs:
       - name: Deploy to Pi
         run: |
           rsync -avz --delete \
-            daily-logger templates \
+            daily-logger templates static  \
             pi@10.85.150.248:/opt/daily-logger/
           ssh pi@10.85.150.248 'sudo systemctl restart daily-logger'
