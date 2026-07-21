@@ -1,4 +1,4 @@
-name: Build and Push to RPi
+name: Deploy to Pi
 
 on:
   push:
@@ -6,15 +6,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: osdev-runner
     steps:
-      - name: Build binary (arm)
-        run: |
-          cd ~/projects/daily-logger
-          git pull
-          GOOS=linux GOARCH=arm64 go build -o daily-logger .
+      - uses: actions/checkout@v4
+
+      - name: Build for arm64
+        run: GOOS=linux GOARCH=arm64 go build -o daily-logger .
+
       - name: Deploy to Pi
         run: |
-          ssh -o ConnectTimeout=10 pi@10.85.150.248 "rm -rf /opt/daily-logger/new && mkdir -p /opt/daily-logger/new"
-          scp -o ConnectTimeout=10 -r ~/projects/daily-logger/. pi@10.85.150.248:/opt/daily-logger/new
-          ssh -o ConnectTimeout=10 pi@10.85.150.248 "rm -rf /opt/daily-logger/current && mv /opt/daily-logger/new /opt/daily-logger/current"
+          rsync -avz --delete \
+            daily-logger templates \
+            pi@10.85.150.248:/opt/daily-logger/
+          ssh pi@10.85.150.248 'sudo systemctl restart daily-logger'

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	db, err := initDB("./data/logger.db")
+	db, err := initDB()
 	if err != nil {
 		log.Fatal(err)
 	}

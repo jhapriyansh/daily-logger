@@ -1,6 +1,13 @@
 #!/bin/bash
-export NTFY_BASE="https://ntfybaseurl..."
-export NTFY_USER="username"
-export NTFY_PASS="password"
-./daily-logger.sh
+set -e
 
+DATA_DIR="/var/lib/daily-logger"
+mkdir -p "$DATA_DIR"
+
+export NTFY_BASE="https://ntfybaseurl..."
+export NTFY_USER="yourusername"
+export NTFY_PASS="yourpassword"
+export DB_PATH="$DATA_DIR/logger.db"
+
+cd "$(dirname "$0")"
+exec ./daily-logger

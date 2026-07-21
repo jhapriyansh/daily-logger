@@ -2,15 +2,22 @@ package main
 
 import (
 	"database/sql"
-      _ "modernc.org/sqlite"
+	"os"
+
+	_ "modernc.org/sqlite"
 )
 
-func initDB(path string) (*sql.DB, error) {
+func initDB() (*sql.DB, error) {
+	path := os.Getenv("DB_PATH")
+	if path == "" {
+		path = "./data/logger.db"
+	}
+
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	schema := `
 	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,4 +52,3 @@ func initDB(path string) (*sql.DB, error) {
 	_, err = db.Exec(schema)
 	return db, err
 }
-

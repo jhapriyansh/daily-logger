@@ -1,0 +1,14 @@
+# /etc/systemd/system/daily-logger.service
+[Unit]
+Description=Daily Logger
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/daily-logger
+ExecStart=/opt/daily-logger/run.sh
+Restart=always
+RestartSec=3
+User=pi
+
+[Install]
+WantedBy=multi-user.target
