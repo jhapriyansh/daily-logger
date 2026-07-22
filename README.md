@@ -6,6 +6,9 @@ Backend: Go + SQLite (modernc.org/sqlite, pure-Go, no CGO)
 Frontend: plain HTML/CSS, no framework
 Notifications: self-hosted ntfy over HTTP
 
+### Prerequisites
+A running ntfy instance reachable over HTTP.
+
 ### Running locally
 
     cp run.sh.example run.sh
@@ -16,13 +19,12 @@ and CHECK_TIMEZONE (IANA name, e.g. Asia/Kolkata), then:
 
     ./run.sh
 
-Requires a running ntfy instance reachable at NTFY_BASE.
-
 ### Running via Docker
 
     cp .env.example .env
 
-Edit .env with the same variables as above, then:
+Edit .env with the same variables as above (NTFY_BASE, NTFY_USER, NTFY_PASS, 
+CHECK_HOUR, CHECK_TIMEZONE), then:
 
     docker compose up --build
 
@@ -38,6 +40,8 @@ Data persists in ./data, mounted into the container at /data.
     ssh pi@<pi-ip> 'sudo mv /tmp/daily-logger.service /etc/systemd/system/daily-logger.service && sudo systemctl daemon-reload && sudo systemctl enable --now daily-logger'
 
 Edit /opt/daily-logger/run.sh on the Pi with real NTFY credentials before starting the service.
+Edit .gitea/workflows/deploy.yml and replace 10.85.150.248 with the actual IP 
+(local network, Tailscale, etc).
 
 After this one-time setup, every push to main auto-builds and deploys via 
 Gitea Actions (see deploy.yml) — only the binary, templates/, and static/ are 
