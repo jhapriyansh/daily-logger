@@ -1,0 +1,15 @@
+services:
+  daily-logger:
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/data
+    environment:
+      - NTFY_BASE=${NTFY_BASE}
+      - NTFY_USER=${NTFY_USER}
+      - NTFY_PASS=${NTFY_PASS}
+      - CHECK_HOUR=${CHECK_HOUR}
+      - CHECK_TIMEZONE=${CHECK_TIMEZONE}
+      - DB_PATH=/data/logger.db

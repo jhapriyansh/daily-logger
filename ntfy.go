@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-func checkMissingJournals(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string) {
-	currentDate := today()
+func checkMissingJournals(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string, loc *time.Location) {
+	today := time.Now().In(loc).Format("2006-01-02")
 
 	rows, err := db.Query(`
 		SELECT t.name FROM topics t
@@ -17,7 +17,7 @@ func checkMissingJournals(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string) {
 			SELECT 1 FROM journals j
 			WHERE j.topic_id = t.id AND j.entry_date = ?
 		)
-	`, currentDate)
+	`, today)
 	if err != nil {
 		return
 	}
@@ -37,16 +37,16 @@ func checkMissingJournals(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string) {
 	}
 }
 
-func startDailyCheck(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string, checkHour int) {
+func startDailyCheck(db *sql.DB, ntfyBase, ntfyUser, ntfyPass string, checkHour int, loc *time.Location) {
 	go func() {
 		for {
-			now := time.Now().In(appLocation())
-			next := time.Date(now.Year(), now.Month(), now.Day(), checkHour, 0, 0, 0, now.Location())
+			now := time.Now().In(loc)
+			next := time.Date(now.Year(), now.Month(), now.Day(), checkHour, 0, 0, 0, loc)
 			if now.After(next) {
 				next = next.Add(24 * time.Hour)
 			}
 			time.Sleep(time.Until(next))
-			checkMissingJournals(db, ntfyBase, ntfyUser, ntfyPass)
+			checkMissingJournals(db, ntfyBase, ntfyUser, ntfyPass, loc)
 		}
 	}()
 }
